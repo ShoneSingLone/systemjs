@@ -1,0 +1,38 @@
+<!doctype html>
+<script>
+  (function (w, isOldBrowser) {
+    w.isOldBrowser = isOldBrowser;
+    var systemjsurl = isOldBrowser ? '../../dist/system.src.js' : '../../dist/system.js';
+    var libs = [
+      '<script src="../dist/polyfill/babel-polyfill.js"><\/script>',
+      '<script src="../dist/polyfill/fetch.js"><\/script>',
+      '<script src="' + systemjsurl + '"><\/script>',
+      '<script src="../../dist/extras/transform.js"><\/script>',
+      '<script src="../dist/babel-transform.js"><\/script>',
+    ];
+    document.write(libs.join(""));
+  })(window, typeof fetch === 'undefined');
+</script>
+<script>
+  if (isOldBrowser) {
+    console.time("isOldBrowser");
+    System.config({
+      map: {
+        'plugin-babel': './plugin-babel.js',
+        'systemjs-babel-build': './systemjs-babel-browser.js'
+      },
+      transpiler: 'plugin-babel'
+    });
+  } else {
+    console.time("smart");
+  }
+
+  System
+    .import('./testing-code.js')
+    .then(function (m) {
+      return m.p();
+    })
+    .then(function (result) {
+      console.log(result);
+    });
+</script>

@@ -10,19 +10,21 @@
       return instantiate.call(this, url, parent);
 
     const loader = this;
-    return fetch(url, { credentials: 'same-origin' })
-    .then(function (res) {
-      if (!res.ok)
-        throw Error('Fetch error: ' + res.status + ' ' + res.statusText + (parent ? ' loading from ' + parent : ''));
-      return res.text();
-    })
-    .then(function (source) {
-      return loader.transform.call(this, url, source);
-    })
-    .then(function (source) {
-      (0, eval)(source + '\n//# sourceURL=' + url);
-      return loader.getRegister();
-    });
+    return fetch(url, {
+        credentials: 'same-origin'
+      })
+      .then(function (res) {
+        if (!res.ok)
+          throw Error('Fetch error: ' + res.status + ' ' + res.statusText + (parent ? ' loading from ' + parent : ''));
+        return res.text();
+      })
+      .then(function (source) {
+        return loader.transform.call(this, url, source);
+      })
+      .then(function (source) {
+        (0, eval)(source + '\n//# sourceURL=' + url);
+        return loader.getRegister();
+      });
   };
 
   // Hookable transform function!
